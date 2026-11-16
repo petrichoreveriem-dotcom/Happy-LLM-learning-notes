@@ -1,5 +1,5 @@
 ### 1.1 什么是NLP
-    自然语言处理(Natural Language Processing,NLP)是研究如何让计算机处理、理解和生成人类语言。
+    自然语言处理(Natural Language Processing,NLP)研究如何让计算机处理、理解和生成人类语言。
 ### 1.2 发展历程
     1950图灵测试→1954乔治城–IBM 实验→1957乔姆斯基出版《句法结构》→1966ALPAC 报告与 ELIZA
     1970s规则系统与专家系统→1980s末统计方法占上风→2001条件随机场(CRF)

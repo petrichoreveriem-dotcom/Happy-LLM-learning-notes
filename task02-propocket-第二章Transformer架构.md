@@ -59,10 +59,14 @@ z = w_1 x_1 + w_2 x_2 + \cdots + w_n x_n + b = \sum_{i=1}^{n} w_i x_i + b
 > ReLU（Rectified Linear Unit，线性整流函数）：现代深度学习最常用的激活函数之一。逻辑极其简单：负数一律归零，正数原样放行。在工程中人为约定 $`z = 0`$ 处导数为 $`0`$\
 ```math
 \begin{pmatrix} h_1 \\ h_2 \\ h_3 \end{pmatrix} = \tanh\left( \begin{pmatrix} w_{11} & w_{12} \\ w_{21} & w_{22} \\ w_{31} & w_{32} \end{pmatrix} \begin{pmatrix} x_1 \\ x_2 \end{pmatrix} + \begin{pmatrix} b_1 \\ b_2 \\ b_3 \end{pmatrix} \right), \quad \text{简写为 } \mathbf{h} = \tanh(W\mathbf{x} + \mathbf{b})
-\qquad
+```
+```math
 \begin{pmatrix} h_1 \\ h_2 \\ h_3 \end{pmatrix} = \tanh\begin{pmatrix} w_{11}x_1 + w_{12}x_2 + b_1 \\ w_{21}x_1 + w_{22}x_2 + b_2 \\ w_{31}x_1 + w_{32}x_2 + b_3 \end{pmatrix} = \begin{pmatrix} \tanh(w_{11}x_1 + w_{12}x_2 + b_1) \\ \tanh(w_{21}x_1 + w_{22}x_2 + b_2) \\ \tanh(w_{31}x_1 + w_{32}x_2 + b_3) \end{pmatrix}
 ```
 > 把多个接收同一组输入、但各自拥有独立权重的神经元并排组织在一起形成的结构即层。在数学上，整层的计算可以打包成一次矩阵乘法。输入层（记作 $`\mathbf{x}`$）：神经网络的最前端，负责接收外部原始数据（图中为 2 维向量 $`x_1, x_2`$）。它本身不做加权和激活计算，只是数据的入口。隐藏层（$`\mathbf{h}`$）：夹在输入层和输出层之间的中间计算层（图中包含 $`h_1, h_2, h_3`$ 共 3 个神经元，输出 3 维向量）。之所以叫“隐藏”，是因为它的数值不直接对外展示，而是模型在内部自动提炼出来的中间特征。输出 / 预测值（$`\hat{y}`$）：神经网络最末端算出来的最终结果（图中为 1 维标量）。在统计学和机器学习中，字母头上加小尖帽（读作 “y-hat”）专门用来表示模型预测出来的值，以区别于真实答案 $`y`$。 全连接（Fully Connected）：一种层与层之间的连接方式，指前一层的每一个神经元都和后一层的每一个神经元之间有一条连线，每一条连线对应一个权重。如果前一层有 $`n`$ 个节点、后一层有 $`m`$ 个节点，全连接就会产生 $`m \times n`$ 条连线（即 $`m \times n`$ 个权重参数）。nn.Linear(2, 3)：深度学习框架 PyTorch 中用来定义“全连接线性层”的代码接口。括号里的两个数字依次表示 (输入维度, 输出维度)——这里输入是 2 维、输出是 3 维，它会在底层自动创建一个 $`3 \times 2`$ 的权重矩阵 $`W`$ 和一个 3 维的偏置向量 $`\mathbf{b}`$（注意：nn.Linear 只包含 $`W\mathbf{x}+\mathbf{b}`$，不包含后面的激活函数）。\
+> 下标 $`w_{ij}`$ 的含义：第一个下标 $`i`$ 表示它属于第 $`i`$ 个输出神经元（对应矩阵第 $`i`$ 行），第二个下标 $`j`$ 表示它乘在第 $`j`$ 个输入 $`x_j`$ 上。例如 $`w_{31}`$ 就是连结“输入 $`x_1`$”和“隐藏神经元 $`h_3`$”那条线上的权重。\
+<img width="1037" height="330" alt="image" src="https://github.com/user-attachments/assets/c7a43c29-e2e2-48ed-8942-501af6bbee3c" />\
+>  \
 > 
 
 

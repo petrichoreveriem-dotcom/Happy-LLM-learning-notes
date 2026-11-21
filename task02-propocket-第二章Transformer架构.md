@@ -37,7 +37,27 @@ $$W\mathbf{x} = \begin{pmatrix} w_{11} & w_{12} & \cdots & w_{1n} \\ w_{21} & w_
 z = w_1 x_1 + w_2 x_2 + \cdots + w_n x_n + b = \sum_{i=1}^{n} w_i x_i + b
 ```
 > 假设神经元的激活临界点是 $`z = 0`$,$`-b`$ 就是必须跨过的分数线。\
->  单个神经元是对输入做1 组加权求和；如果把 $`m`$ 个这样的神经元并排摆成一层，它们的权重拼起来就是一个 $`m \times n`$ 的矩阵 $`W`$，整层的线性计算就变成了上一页学过的 $`W\mathbf{x} + \mathbf{b}`$。 
+>  单个神经元是对输入做1 组加权求和；如果把 $`m`$ 个这样的神经元并排摆成一层，它们的权重拼起来就是一个 $`m \times n`$ 的矩阵 $`W`$，整层的线性计算就变成了上面的 $`W\mathbf{x} + \mathbf{b}`$。
+> 常用的三个激活函数
+```math
+\sigma(z) = \frac{1}{1 + e^{-z}}
+```
+> 在函数图像上，导数就是曲线在某一点的倾斜程度（切线斜率）。sigmoid（S 型函数 / 逻辑斯蒂函数）：一种把任意实数压缩到 $`(0, 1)`$ 之间的平滑 S 形激活函数。\
+> $`\sigma'(z) = \sigma(z)\bigl(1 - \sigma(z)\bigr)`$，导数最大值为 0.25
+```math
+\tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}
+```
+> tanh（Hyperbolic Tangent，双曲正切函数）：另一种平滑 S 形激活函数，把任意实数压缩到 $(-1, 1)$ 之间。相比 sigmoid，它的输出以 $0$ 为中心（有正有负）。\
+> $`\tanh'(z) = 1 - \tanh^2(z)`$，导数最大值是 $1$
+```math
+\text{ReLU}(z) = \max(0, z)
+\qquad
+\text{ReLU}(z) = \begin{cases} z, & z > 0 \\ 0, & z \le 0 \end{cases}
+\qquad
+\text{ReLU}'(z) = \begin{cases} 1, & z > 0 \\ 0, & z \le 0 \end{cases}
+```
+> ReLU（Rectified Linear Unit，线性整流函数）：现代深度学习最常用的激活函数之一。逻辑极其简单：负数一律归零，正数原样放行。在工程中人为约定 $`z = 0`$ 处导数为 $`0`$
+> 
 
 
 

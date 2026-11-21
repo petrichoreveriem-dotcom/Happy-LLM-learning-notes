@@ -83,7 +83,6 @@ W_2(W_1\mathbf{x} + \mathbf{b}_1) + \mathbf{b}_2 = \underbrace{(W_2 W_1)}_{\text
 W_2 \cdot \sigma(W_1\mathbf{x} + \mathbf{b}_1) + \mathbf{b}_2
 ```
 > 如果在两层中间夹一个非线性激活函数（如 $`\tanh`$ 或 ReLU），因为 $`\sigma`$ 是非线性的，不满足分配律（$`\sigma(a+b) \neq \sigma(a)+\sigma(b)`$），$`W_2`$ 被挡在 $`\sigma`$ 的括号外面，穿不进去和 $`W_1`$ 合并。这样两层才真正实现了先对空间做“弯折变换”，再做线性切分的效果。
-> 
 
 
 

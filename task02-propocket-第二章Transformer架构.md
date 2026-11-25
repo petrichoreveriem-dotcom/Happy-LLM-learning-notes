@@ -170,6 +170,25 @@ L = \sum_{t=1}^{T-1} -\log p_t(x_{t+1})
 > 把梯度向量 $\mathbf{g}$ 更新为“原梯度向量 $\mathbf{g}$ 乘以 ‘$1$’ 和 ‘阈值 $\theta$ 除以梯度向量长度 $\Vert{}\mathbf{g}\Vert{}$’ 这两个数中较小的那一个”。\
 > 问题：记忆每一步都要整体乘一次 W_{hh} 再过 tanh,远处的信息和梯度都会指数级衰减(或爆炸)。实际能用上的上下文很短。
 ##### 长短期记忆网络 LSTM
+<img width="1073" height="569" alt="image" src="https://github.com/user-attachments/assets/65be1125-fc0e-43af-8ad8-46b0807fc0b7" />
+
+> LSTM（Long Short-Term Memory，长短期记忆网络，Hochreiter 和 Schmidhuber, 1997）：由 Sepp Hochreiter 和 Jürgen Schmidhuber 于 1997 年提出的一种改进型循环神经网络。它的核心创新是额外开辟了一条专门存放长期记忆的通道，用来解决普通 RNN 的梯度消失和长距离遗忘问题。细胞状态 / 记忆元（Cell State，记作 $\mathbf{c}_t$）：图中最上方那条粗蓝线，形象地称为“传送带”。它是 LSTM 专门用来存放长期记忆的独立通道，信息可以在上面几乎无损地向后传递很远。门（Gate）：本质上就是一个带 sigmoid（$\sigma$）激活函数的单层小神经网络。因为 sigmoid 的输出恒在 $0$ 到 $1$ 之间，它就像水管上的“阀门开度”：$0$ 表示完全关闭（彻底拦截/丢弃），$1$ 表示完全打开（全部放行/保留），中间值（如 $0.7$）表示按比例放行，随后再与要控制的向量做逐元素相乘。遗忘门（Forget Gate，记作 $\mathbf{f}$）：三个门中的第一个，负责决定要把传送带上旧记忆 $\mathbf{c}_{t-1}$ 的哪些维度按多大比例“擦掉”。输入门（Input Gate，记作 $\mathbf{i}$）：三个门中的第二个，负责决定要把当前新整理出的候选内容按多大比例“写入”传送带。候选（Candidate，记作 $\mathbf{g}$）：图中蓝色方框（使用 $\tanh$ 激活），全称“候选细胞状态”或“候选记忆”。它不是阀门，而是根据旧隐藏状态 $\mathbf{h}_{t-1}$ 和当前新词 $\mathbf{x}_t$ 提炼出来的“新内容草稿”（数值在 $-1$ 到 $1$ 之间），准备写入传送带。（注：不同教材符号略有差异，前面我曾用 $\tilde{C}_t$ 表示它，这里用 $\mathbf{g}$，含义完全相同。）输出门（Output Gate，记作 $\mathbf{o}$）：三个门中的第三个，负责决定当前这一步要从传送带 $\mathbf{c}_t$ 里“读出”多少内容，作为当前步的短期对外输出 $\mathbf{h}_t$。
+> <img width="1054" height="465" alt="image" src="https://github.com/user-attachments/assets/cc89044b-a1af-47be-8b08-85c0d3318216" />
+```math
+\begin{aligned}
+\mathbf{f}_t = \sigma(W_f \mathbf{x}_t + U_f \mathbf{h}_{t-1} + \mathbf{b}_f)\\
+\mathbf{i}_t = \sigma(W_i \mathbf{x}_t + U_i \mathbf{h}_{t-1} + \mathbf{b}_i)\\
+\mathbf{g}_t = \tanh(W_g \mathbf{x}_t + U_g \mathbf{h}_{t-1} + \mathbf{b}_g)\\
+\mathbf{o}_t = \sigma(W_o \mathbf{x}_t + U_o \mathbf{h}_{t-1} + \mathbf{b}_o)\\
+\mathbf{c}_t = \mathbf{f}_t \odot \mathbf{c}_{t-1} + \mathbf{i}_t \odot \mathbf{g}_t\\
+\mathbf{h}_t = \mathbf{o}_t \odot \tanh(\mathbf{c}_t)\\
+\end{aligned}
+```
+> 这些开关不是人写的规则,而是训练出来的:门的权重和其他参数一起用反向传播学习。细胞状态 \mathbf c_t 是"长期记忆",\mathbf h_t 是这一步"拿出来用的那部分",既送去做预测,也作为下一步四个门的输入。"长短期记忆"的名字,意思是让短期记忆(隐藏状态)能维持很长时间。
+>
+> 痛点 ①（算得慢）：第 $t$ 步必须死等第 $t-1$ 步算完，一句话有 1000 个词就得串行算 1000 轮，GPU 无法并行，极大限制了用海量语料训练超大模型的速度。痛点 ②（依然会忘）：虽然传送带缓解了梯度消失，但第 1 个词和第 1000 个词之间依然隔着 999 次逐步传递；只要中途有几步遗忘门不够接近 $1$，远距离信息还是会在连乘中逐渐流失。
+>
+
 
 
 
